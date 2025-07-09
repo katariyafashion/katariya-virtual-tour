@@ -1,5 +1,4 @@
 var viewer = new Marzipano.Viewer(document.getElementById('pano'));
-
 var scenes = {};
 
 function createScene(id, title) {
@@ -13,32 +12,19 @@ function createScene(id, title) {
     view: view,
     pinFirstLevel: true
   });
-  scenes[id] = {
-    id: id,
-    title: title,
-    scene: scene,
-    view: view
-  };
+  scenes[id] = { id, title, scene, view };
 }
 
-var sceneList = [
-  "outside",
-  "mainhall",
-  "dress_material",
-  "pant_set_reception",
-  "pant_set_department",
-  "kurtis_upstairs",
-  "kurti_downstairs"
-];
-
-sceneList.forEach(function(id) {
+[
+  "outside", "mainhall", "dress_material",
+  "pant_set_reception", "pant_set_department",
+  "kurtis_upstairs", "kurti_downstairs"
+].forEach(function(id) {
   createScene(id, id);
 });
 
-// Load first scene
 scenes["outside"].scene.switchTo();
 
-// Make navigation function global
 window.gotoScene = function(id) {
   if (scenes[id]) {
     scenes[id].scene.switchTo();
