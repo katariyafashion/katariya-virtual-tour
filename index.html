@@ -4,18 +4,24 @@
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
 
-  <!-- ✅ Load Marzipano with full blocking load (NO defer) -->
+  <!-- ✅ Load Marzipano from jsDelivr CDN -->
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
+
   <style>
     body { margin: 0; }
     #pano { width: 100vw; height: 100vh; background: black; }
     .nav-buttons {
       position: absolute; bottom: 20px; left: 50%;
-      transform: translateX(-50%); display: flex; gap: 10px; z-index: 9999;
+      transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 9999;
     }
     .nav-buttons button {
-      padding: 8px 12px; font-size: 14px; background: #fff;
-      border: none; border-radius: 5px; cursor: pointer;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -33,7 +39,6 @@
     <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
 
-  <!-- ✅ Wrap logic in window.onload -->
   <script>
     window.onload = function () {
       var viewer = new Marzipano.Viewer(document.getElementById('pano'));
@@ -63,6 +68,7 @@
 
       scenes["outside"].scene.switchTo();
 
+      // ✅ This is the missing part you noticed
       window.gotoScene = function(id) {
         if (scenes[id]) {
           scenes[id].scene.switchTo();
@@ -72,5 +78,6 @@
       };
     };
   </script>
+
 </body>
 </html>
