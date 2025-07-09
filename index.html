@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
 
-  <!-- ✅ Load Marzipano -->
+  <!-- Load Marzipano -->
   <script src="https://cdn.jsdelivr.net/gh/google/marzipano@gh-pages/demos/vendor/marzipano.js"></script>
 
   <style>
@@ -38,16 +38,16 @@
   <div id="pano">Loading virtual tour...</div>
 
   <div class="nav-buttons">
-    <button onclick="gotoScene('outside')">Outside</button>
-    <button onclick="gotoScene('mainhall')">Main Hall</button>
-    <button onclick="gotoScene('dress_material')">Dress Material</button>
-    <button onclick="gotoScene('pant_set_reception')">Reception</button>
-    <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
-    <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
-    <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
+    <button onclick="window.gotoScene('outside')">Outside</button>
+    <button onclick="window.gotoScene('mainhall')">Main Hall</button>
+    <button onclick="window.gotoScene('dress_material')">Dress Material</button>
+    <button onclick="window.gotoScene('pant_set_reception')">Reception</button>
+    <button onclick="window.gotoScene('pant_set_department')">Pant Sets</button>
+    <button onclick="window.gotoScene('kurtis_upstairs')">Short Kurtis</button>
+    <button onclick="window.gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
 
-  <!-- ✅ Wrap everything in window.onload -->
+  <!-- Final JS inside onload -->
   <script>
     window.onload = function() {
       var viewer = new Marzipano.Viewer(document.getElementById('pano'));
@@ -72,19 +72,25 @@
         };
       }
 
-      // Define all scenes
-      createScene("outside", "Outside");
-      createScene("mainhall", "Main Hall");
-      createScene("dress_material", "Dress Material");
-      createScene("pant_set_reception", "Pant Set Reception");
-      createScene("pant_set_department", "Pant Set Department");
-      createScene("kurtis_upstairs", "Short Kurtis");
-      createScene("kurti_downstairs", "Long Kurtis");
+      var sceneList = [
+        "outside",
+        "mainhall",
+        "dress_material",
+        "pant_set_reception",
+        "pant_set_department",
+        "kurtis_upstairs",
+        "kurti_downstairs"
+      ];
+
+      // Create all scenes
+      sceneList.forEach(function(id) {
+        createScene(id, id.replace(/_/g, ' '));
+      });
 
       // Load first scene
       scenes["outside"].scene.switchTo();
 
-      // Make gotoScene globally accessible
+      // Make gotoScene global after scenes are built
       window.gotoScene = function(id) {
         if (scenes[id]) {
           scenes[id].scene.switchTo();
