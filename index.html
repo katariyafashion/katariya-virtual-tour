@@ -4,11 +4,9 @@
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
 
-  <!-- ✅ Load Marzipano first -->
-<script defer src="https://cdn.jsdelivr.net/gh/google/marzipano@gh-pages/demos/vendor/marzipano.js"></script>
+  <!-- ✅ Marzipano from official CDN -->
+  <script src="https://cdn.jsdelivr.net/gh/google/marzipano@gh-pages/demos/vendor/marzipano.js" defer></script>
 
-<!-- ✅ Then your viewer script -->
-<script defer src="js/pano.js"></script>
   <style>
     body { margin: 0; }
     #pano { width: 100vw; height: 100vh; background: black; }
@@ -22,11 +20,10 @@
     }
   </style>
 </head>
-
 <body>
+
   <div id="pano">Loading virtual tour...</div>
 
-  <!-- Buttons (these wait for JS via defer) -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -36,5 +33,45 @@
     <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
     <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
+
+  <!-- ✅ Embed all Marzipano logic -->
+  <script defer>
+    window.addEventListener("DOMContentLoaded", function () {
+      var viewer = new Marzipano.Viewer(document.getElementById('pano'));
+      var scenes = {};
+
+      function createScene(id, title) {
+        var source = Marzipano.ImageUrlSource.fromString("scenes/" + id + ".jpg");
+        var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+        var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+        var view = new Marzipano.RectilinearView(null, limiter);
+        var scene = viewer.createScene({
+          source: source,
+          geometry: geometry,
+          view: view,
+          pinFirstLevel: true
+        });
+        scenes[id] = { id, title, scene, view };
+      }
+
+      [
+        "outside", "mainhall", "dress_material",
+        "pant_set_reception", "pant_set_department",
+        "kurtis_upstairs", "kurti_downstairs"
+      ].forEach(function(id) {
+        createScene(id, id);
+      });
+
+      scenes["outside"].scene.switchTo();
+
+      window.gotoScene = function(id) {
+        if (scenes[id]) {
+          scenes[id].scene.switchTo();
+        } else {
+          alert("Scene not found: " + id);
+        }
+      };
+    });
+  </script>
 </body>
 </html>
