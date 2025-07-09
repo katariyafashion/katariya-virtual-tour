@@ -3,18 +3,44 @@
 <head>
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- ✅ Load Marzipano from jsDelivr CDN -->
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
 
   <style>
-    body { margin: 0; }
-    #pano { width: 100vw; height: 100vh; background: black; }
-    .nav-buttons {
-      position: absolute; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 10px; z-index: 9999;
+    body { margin: 0; font-family: sans-serif; }
+
+    #pano {
+      width: 100vw;
+      height: 100vh;
+      background: black;
     }
+
+    #startOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .nav-buttons {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 9999;
+    }
+
     .nav-buttons button {
       padding: 8px 12px;
       font-size: 14px;
@@ -27,8 +53,13 @@
 </head>
 <body>
 
+  <!-- ✅ Tap-to-start overlay -->
+  <div id="startOverlay">Tap to Start Virtual Tour</div>
+
+  <!-- ✅ 360 Viewer Container -->
   <div id="pano">Loading virtual tour...</div>
 
+  <!-- ✅ Navigation Buttons -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -39,36 +70,43 @@
     <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
 
+  <!-- ✅ Script -->
   <script>
-    window.onload = function () {
-      var viewer = new Marzipano.Viewer(document.getElementById('pano'));
-      var scenes = {};
+    var viewer, scenes = {};
 
-      function createScene(id, title) {
-        var source = Marzipano.ImageUrlSource.fromString("scenes/" + id + ".jpg");
-        var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-        var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
-        var view = new Marzipano.RectilinearView(null, limiter);
-        var scene = viewer.createScene({
-          source: source,
-          geometry: geometry,
-          view: view,
-          pinFirstLevel: true
-        });
-        scenes[id] = { id, title, scene, view };
-      }
+    function createScene(id, title) {
+      var source = Marzipano.ImageUrlSource.fromString("scenes/" + id + ".jpg");
+      var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+      var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+      var view = new Marzipano.RectilinearView(null, limiter);
+      var scene = viewer.createScene({
+        source: source,
+        geometry: geometry,
+        view: view,
+        pinFirstLevel: true
+      });
+      scenes[id] = { id, title, scene, view };
+    }
+
+    function initTour() {
+      document.getElementById("startOverlay").style.display = "none";
+
+      viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
       [
-        "outside", "mainhall", "dress_material",
-        "pant_set_reception", "pant_set_department",
-        "kurtis_upstairs", "kurti_downstairs"
+        "outside",
+        "mainhall",
+        "dress_material",
+        "pant_set_reception",
+        "pant_set_department",
+        "kurtis_upstairs",
+        "kurti_downstairs"
       ].forEach(function(id) {
         createScene(id, id);
       });
 
       scenes["outside"].scene.switchTo();
 
-      // ✅ This is the missing part you noticed
       window.gotoScene = function(id) {
         if (scenes[id]) {
           scenes[id].scene.switchTo();
@@ -76,7 +114,12 @@
           alert("Scene not found: " + id);
         }
       };
-    };
+    }
+
+    // Start only on user tap
+    window.addEventListener('DOMContentLoaded', function () {
+      document.getElementById("startOverlay").addEventListener("click", initTour);
+    });
   </script>
 
 </body>
