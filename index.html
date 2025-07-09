@@ -5,7 +5,7 @@
   <title>Katariya Fashion Virtual Tour</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- ✅ Load Marzipano from jsDelivr CDN -->
+  <!-- ✅ Marzipano Library -->
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
 
   <style>
@@ -56,10 +56,10 @@
   <!-- ✅ Tap-to-start overlay -->
   <div id="startOverlay">Tap to Start Virtual Tour</div>
 
-  <!-- ✅ 360 Viewer Container -->
+  <!-- ✅ Viewer container -->
   <div id="pano">Loading virtual tour...</div>
 
-  <!-- ✅ Navigation Buttons -->
+  <!-- ✅ Navigation buttons -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -75,7 +75,17 @@
     var viewer, scenes = {};
 
     function createScene(id, title) {
-      var source = Marzipano.ImageUrlSource.fromString("scenes/" + id + ".jpg");
+      // ✅ Use capitalized .JPG extension
+      var imageUrl = "scenes/" + id + ".JPG";
+
+      // Optional debug: alert if image fails
+      var img = new Image();
+      img.src = imageUrl;
+      img.onerror = function () {
+        alert("❌ Error loading image: " + imageUrl);
+      };
+
+      var source = Marzipano.ImageUrlSource.fromString(imageUrl);
       var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
       var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
       var view = new Marzipano.RectilinearView(null, limiter);
@@ -116,7 +126,7 @@
       };
     }
 
-    // Start only on user tap
+    // ✅ Wait for user tap to initialize
     window.addEventListener('DOMContentLoaded', function () {
       document.getElementById("startOverlay").addEventListener("click", initTour);
     });
