@@ -39,9 +39,11 @@ createScene("kurti_downstairs", "Long Kurtis (Downstairs)");
 // Start with 'outside'
 scenes["outside"].scene.switchTo();
 
-// Example navigation buttons (you can connect these to HTML)
+// ✅ Global scene switch function for navigation buttons
 window.gotoScene = function(id) {
   if (scenes[id]) {
     scenes[id].scene.switchTo();
+  } else {
+    console.warn("Scene not found:", id);
   }
-}
+};
