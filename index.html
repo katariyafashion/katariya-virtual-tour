@@ -1,12 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Katariya Fashion Virtual Tour</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/pano.js" defer></script>
+  <meta charset="utf-8">
+  <title>Katariya Fashion Virtual Tour</title>
+
+  <!-- ✅ Load Marzipano Library -->
+  <script src="https://www.marzipano.net/demos/vendor/marzipano.js"></script>
+
+  <!-- CSS & JS -->
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/pano.js" defer></script>
+
+  <style>
+    body { margin: 0; }
+    #pano {
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+    }
+    .nav-buttons {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+    .nav-buttons button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div id="pano">Loading virtual tour...</div>
+  <div id="pano">Loading virtual tour...</div>
+
+  <!-- Optional navigation buttons -->
+  <div class="nav-buttons">
+    <button onclick="gotoScene('outside')">Outside</button>
+    <button onclick="gotoScene('mainhall')">Main Hall</button>
+    <button onclick="gotoScene('dress_material')">Dress Material</button>
+    <button onclick="gotoScene('pant_set_reception')">Reception</button>
+    <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
+    <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
+    <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
+  </div>
 </body>
 </html>
