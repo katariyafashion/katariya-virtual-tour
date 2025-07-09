@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
 
-  <!-- Load Marzipano -->
+  <!-- Load Marzipano library from CDN -->
   <script src="https://cdn.jsdelivr.net/gh/google/marzipano@gh-pages/demos/vendor/marzipano.js"></script>
 
   <style>
@@ -12,7 +12,7 @@
     #pano {
       width: 100vw;
       height: 100vh;
-      background: black;
+      background-color: black;
     }
     .nav-buttons {
       position: absolute;
@@ -37,7 +37,7 @@
 
   <div id="pano">Loading virtual tour...</div>
 
-  <!-- Buttons -->
+  <!-- Navigation Buttons -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -48,7 +48,6 @@
     <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
 
-  <!-- ✅ Embed pano.js directly here -->
   <script>
     var viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
@@ -85,7 +84,7 @@
     // Load first scene
     scenes["outside"].scene.switchTo();
 
-    // Button function
+    // Button navigation function
     function gotoScene(id) {
       if (scenes[id]) {
         scenes[id].scene.switchTo();
@@ -94,5 +93,6 @@
       }
     }
   </script>
+
 </body>
 </html>
