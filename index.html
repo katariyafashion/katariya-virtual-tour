@@ -43,13 +43,9 @@
 </head>
 <body>
 
-  <!-- Start overlay -->
   <div id="startOverlay">Tap to Start Virtual Tour</div>
-
-  <!-- Panorama viewer -->
   <div id="pano"></div>
 
-  <!-- Navigation buttons -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -62,7 +58,6 @@
 
   <script>
     var viewer, scenes = {};
-
     var sceneList = {
       "outside": "outside.jpg",
       "mainhall": "mainhall.jpg",
@@ -74,35 +69,24 @@
     };
 
     function createScene(id) {
-      try {
-        var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
-        var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-        var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
-        var view = new Marzipano.RectilinearView(null, limiter);
-        var scene = viewer.createScene({
-          source: source,
-          geometry: geometry,
-          view: view,
-          pinFirstLevel: true
-        });
-
-        scenes[id] = { scene, view };
-      } catch (err) {
-        console.error("Failed to load scene:", id, err);
-        alert("Error loading scene: " + id);
-      }
+      var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
+      var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+      var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+      var view = new Marzipano.RectilinearView(null, limiter);
+      var scene = viewer.createScene({
+        source: source,
+        geometry: geometry,
+        view: view,
+        pinFirstLevel: true
+      });
+      scenes[id] = { scene, view };
     }
 
     function startTour() {
       document.getElementById("startOverlay").style.display = "none";
       viewer = new Marzipano.Viewer(document.getElementById("pano"));
-
       Object.keys(sceneList).forEach(createScene);
-
-      // Load default first scene
-      if (scenes["outside"]) {
-        scenes["outside"].scene.switchTo();
-      }
+      scenes["outside"].scene.switchTo();
     }
 
     window.gotoScene = function(id) {
