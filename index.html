@@ -4,43 +4,25 @@
   <meta charset="utf-8">
   <title>Katariya Fashion Virtual Tour</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <!-- ✅ Marzipano Library -->
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
 
   <style>
     body { margin: 0; font-family: sans-serif; }
-
-    #pano {
-      width: 100vw;
-      height: 100vh;
-      background: black;
-    }
-
+    #pano { width: 100vw; height: 100vh; background: black; }
     #startOverlay {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: black;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      z-index: 10000;
+      background: black; color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; z-index: 10000;
       cursor: pointer;
     }
-
     .nav-buttons {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
+      position: absolute; bottom: 20px; left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 9999;
+      display: flex; gap: 10px; z-index: 9999;
     }
-
     .nav-buttons button {
       padding: 8px 12px;
       font-size: 14px;
@@ -53,13 +35,9 @@
 </head>
 <body>
 
-  <!-- ✅ Tap-to-start overlay -->
   <div id="startOverlay">Tap to Start Virtual Tour</div>
-
-  <!-- ✅ Viewer container -->
   <div id="pano">Loading virtual tour...</div>
 
-  <!-- ✅ Navigation buttons -->
   <div class="nav-buttons">
     <button onclick="gotoScene('outside')">Outside</button>
     <button onclick="gotoScene('mainhall')">Main Hall</button>
@@ -70,20 +48,22 @@
     <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
   </div>
 
-  <!-- ✅ Script -->
   <script>
     var viewer, scenes = {};
 
-    function createScene(id, title) {
-      // ✅ Use capitalized .JPG extension
-      var imageUrl = "scenes/" + id + ".JPG";
+    // ✅ Map actual filenames to IDs
+    var fileMap = {
+      "outside": "Outside.jpg",
+      "mainhall": "MainHall.jpg",
+      "dress_material": "Dress_Material.jpg",
+      "pant_set_reception": "Pant_Set_Reception.jpg",
+      "pant_set_department": "Pant_Set_Department.jpg",
+      "kurtis_upstairs": "Kurtis_Upstairs.jpg",
+      "kurti_downstairs": "Kurti_Downstairs.jpg"
+    };
 
-      // Optional debug: alert if image fails
-      var img = new Image();
-      img.src = imageUrl;
-      img.onerror = function () {
-        alert("❌ Error loading image: " + imageUrl);
-      };
+    function createScene(id, title) {
+      var imageUrl = "scenes/" + fileMap[id];
 
       var source = Marzipano.ImageUrlSource.fromString(imageUrl);
       var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
@@ -100,18 +80,9 @@
 
     function initTour() {
       document.getElementById("startOverlay").style.display = "none";
-
       viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
-      [
-        "outside",
-        "mainhall",
-        "dress_material",
-        "pant_set_reception",
-        "pant_set_department",
-        "kurtis_upstairs",
-        "kurti_downstairs"
-      ].forEach(function(id) {
+      Object.keys(fileMap).forEach(function(id) {
         createScene(id, id);
       });
 
@@ -126,7 +97,6 @@
       };
     }
 
-    // ✅ Wait for user tap to initialize
     window.addEventListener('DOMContentLoaded', function () {
       document.getElementById("startOverlay").addEventListener("click", initTour);
     });
