@@ -60,6 +60,8 @@
 
   <script>
     var viewer, scenes = {};
+
+    // ✅ Match filenames in your GitHub /scenes folder (case-sensitive!)
     var sceneList = {
       "outside": "outside.jpg",
       "mainhall": "mainhall.jpg",
@@ -96,6 +98,7 @@
 
       scenes["outside"].scene.switchTo();
 
+      // Scene change function for buttons
       window.gotoScene = function(id) {
         if (scenes[id]) {
           scenes[id].scene.switchTo();
@@ -105,11 +108,13 @@
       };
     }
 
+    // ✅ Wait for DOM and user interaction to start WebGL
     window.addEventListener("load", function () {
-      var overlay = document.getElementById("startOverlay");
+      const overlay = document.getElementById("startOverlay");
       overlay.addEventListener("click", startTour, { once: true });
       overlay.addEventListener("touchstart", startTour, { once: true });
     });
   </script>
+
 </body>
 </html>
