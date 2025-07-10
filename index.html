@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
   <style>
-    body { margin: 0; font-family: sans-serif; }
-    #pano { width: 100vw; height: 100vh; background: black; }
+    body { margin: 0; font-family: sans-serif; background: black; }
+    #pano { width: 100vw; height: 100vh; }
 
     #startOverlay {
       position: fixed;
@@ -24,9 +24,11 @@
     }
 
     .nav-buttons {
-      position: absolute; bottom: 20px; left: 50%;
+      position: absolute;
+      bottom: 20px; left: 50%;
       transform: translateX(-50%);
-      display: flex; gap: 10px; z-index: 9998;
+      display: flex; flex-wrap: wrap;
+      gap: 10px; z-index: 9998;
     }
 
     .nav-buttons button {
@@ -60,6 +62,7 @@
 
   <script>
     var viewer, scenes = {};
+
     var sceneList = {
       "outside": "outside.jpg",
       "mainhall": "mainhall.jpg",
@@ -71,41 +74,45 @@
     };
 
     function createScene(id) {
-      var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
-      var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-      var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
-      var view = new Marzipano.RectilinearView(null, limiter);
+      try {
+        var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
+        var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+        var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+        var view = new Marzipano.RectilinearView(null, limiter);
+        var scene = viewer.createScene({
+          source: source,
+          geometry: geometry,
+          view: view,
+          pinFirstLevel: true
+        });
 
-      var scene = viewer.createScene({
-        source: source,
-        geometry: geometry,
-        view: view,
-        pinFirstLevel: true
-      });
-
-      scenes[id] = { scene, view };
+        scenes[id] = { scene, view };
+      } catch (err) {
+        console.error("Failed to load scene:", id, err);
+        alert("Error loading scene: " + id);
+      }
     }
 
     function startTour() {
       document.getElementById("startOverlay").style.display = "none";
       viewer = new Marzipano.Viewer(document.getElementById("pano"));
 
-      Object.keys(sceneList).forEach(function(id) {
-        createScene(id);
-      });
+      Object.keys(sceneList).forEach(createScene);
 
-      scenes["outside"].scene.switchTo();
-
-      window.gotoScene = function(id) {
-        if (scenes[id]) {
-          scenes[id].scene.switchTo();
-        } else {
-          alert("Scene not found: " + id);
-        }
-      };
+      // Load default first scene
+      if (scenes["outside"]) {
+        scenes["outside"].scene.switchTo();
+      }
     }
 
-    // Attach click/touch once page is loaded
+    window.gotoScene = function(id) {
+      if (scenes[id]) {
+        scenes[id].scene.switchTo();
+      } else {
+        alert("Scene not found: " + id);
+      }
+    };
+
     window.addEventListener("load", function () {
       var overlay = document.getElementById("startOverlay");
       overlay.addEventListener("click", startTour, { once: true });
