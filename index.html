@@ -1,83 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Katariya Fashion Virtual Tour</title>
+<script>
+  var viewer, scenes = {};
 
-  <!-- ✅ Load Marzipano from jsDelivr CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
+  var fileMap = {
+    "outside": "outside.jpg",
+    "mainhall": "mainhall.jpg",
+    "dress_material": "dress_material.jpg",
+    "pant_set_reception": "pant_set_reception.jpg",
+    "pant_set_department": "pant_set_department.jpg",
+    "kurtis_upstairs": "kurtis_upstairs.jpg",
+    "kurti_downstairs": "kurti_downstairs.jpg"
+  };
 
-  <style>
-    body { margin: 0; }
-    #pano { width: 100vw; height: 100vh; background: black; }
-    .nav-buttons {
-      position: absolute; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 10px; z-index: 9999;
-    }
-    .nav-buttons button {
-      padding: 8px 12px;
-      font-size: 14px;
-      background: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+  function createScene(id, title) {
+    var imageUrl = "scenes/" + fileMap[id];
 
-  <div id="pano">Loading virtual tour...</div>
+    var source = Marzipano.ImageUrlSource.fromString(imageUrl);
+    var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+    var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+    var view = new Marzipano.RectilinearView(null, limiter);
 
-  <div class="nav-buttons">
-    <button onclick="gotoScene('outside')">Outside</button>
-    <button onclick="gotoScene('mainhall')">Main Hall</button>
-    <button onclick="gotoScene('dress_material')">Dress Material</button>
-    <button onclick="gotoScene('pant_set_reception')">Reception</button>
-    <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
-    <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
-    <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
-  </div>
+    var scene = viewer.createScene({
+      source: source,
+      geometry: geometry,
+      view: view,
+      pinFirstLevel: true
+    });
 
-  <script>
-    window.onload = function () {
-      var viewer = new Marzipano.Viewer(document.getElementById('pano'));
-      var scenes = {};
+    scenes[id] = { id, title, scene, view };
+  }
 
-      function createScene(id, title) {
-        var source = Marzipano.ImageUrlSource.fromString("scenes/" + id + ".jpg");
-        var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-        var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
-        var view = new Marzipano.RectilinearView(null, limiter);
-        var scene = viewer.createScene({
-          source: source,
-          geometry: geometry,
-          view: view,
-          pinFirstLevel: true
-        });
-        scenes[id] = { id, title, scene, view };
+  function initTour() {
+    document.getElementById("startOverlay").style.display = "none";
+    viewer = new Marzipano.Viewer(document.getElementById('pano'));
+
+    Object.keys(fileMap).forEach(function(id) {
+      createScene(id, id);
+    });
+
+    scenes["outside"].scene.switchTo();
+
+    // Force a repaint (fixes mobile WebGL black issue)
+    setTimeout(() => {
+      viewer.stage().update();
+    }, 200);
+
+    window.gotoScene = function(id) {
+      if (scenes[id]) {
+        scenes[id].scene.switchTo();
+        setTimeout(() => viewer.stage().update(), 100); // force repaint
+      } else {
+        alert("Scene not found: " + id);
       }
-
-      [
-        "outside", "mainhall", "dress_material",
-        "pant_set_reception", "pant_set_department",
-        "kurtis_upstairs", "kurti_downstairs"
-      ].forEach(function(id) {
-        createScene(id, id);
-      });
-
-      scenes["outside"].scene.switchTo();
-
-      // ✅ This is the missing part you noticed
-      window.gotoScene = function(id) {
-        if (scenes[id]) {
-          scenes[id].scene.switchTo();
-        } else {
-          alert("Scene not found: " + id);
-        }
-      };
     };
-  </script>
+  }
 
-</body>
-</html>
+  // Wait for user tap
+  window.addEventListener('DOMContentLoaded', function () {
+    const overlay = document.getElementById("startOverlay");
+    overlay.addEventListener("touchstart", initTour, { once: true });
+    overlay.addEventListener("click", initTour, { once: true });
+  });
+</script>
