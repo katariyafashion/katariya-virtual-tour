@@ -1,5 +1,66 @@
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Katariya Fashion Virtual Tour</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
+
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    #pano { width: 100vw; height: 100vh; background: black; }
+
+    #startOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .nav-buttons {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 9999;
+    }
+
+    .nav-buttons button {
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Overlay shown before user starts -->
+  <div id="startOverlay">Tap to Start Virtual Tour</div>
+
+  <!-- Viewer Container -->
+  <div id="pano">Loading virtual tour...</div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button onclick="gotoScene('outside')">Outside</button>
+    <button onclick="gotoScene('mainhall')">Main Hall</button>
+    <button onclick="gotoScene('dress_material')">Dress Material</button>
+    <button onclick="gotoScene('pant_set_reception')">Reception</button>
+    <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
+    <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
+    <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
+  </div>
+
+  <!-- Script goes at end to ensure all elements are loaded -->
+  <script>
     var viewer, scenes = {};
 
     var fileMap = {
@@ -48,8 +109,13 @@
       };
     }
 
-    const overlay = document.getElementById("startOverlay");
-    overlay.addEventListener("click", initTour, { once: true });
-    overlay.addEventListener("touchstart", initTour, { once: true });
-  });
-</script>
+    // ✅ Now that DOM is ready, attach click listener
+    window.addEventListener('load', function () {
+      const overlay = document.getElementById("startOverlay");
+      overlay.addEventListener("click", initTour, { once: true });
+      overlay.addEventListener("touchstart", initTour, { once: true });
+    });
+  </script>
+
+</body>
+</html>
