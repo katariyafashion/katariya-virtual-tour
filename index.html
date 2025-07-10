@@ -41,7 +41,7 @@
 </head>
 <body>
 
-  <!-- Tap-to-start overlay -->
+  <!-- Start overlay -->
   <div id="startOverlay">Tap to Start Virtual Tour</div>
 
   <!-- Panorama viewer -->
@@ -60,8 +60,6 @@
 
   <script>
     var viewer, scenes = {};
-
-    // ✅ Match filenames in your GitHub /scenes folder (case-sensitive!)
     var sceneList = {
       "outside": "outside.jpg",
       "mainhall": "mainhall.jpg",
@@ -98,7 +96,6 @@
 
       scenes["outside"].scene.switchTo();
 
-      // Scene change function for buttons
       window.gotoScene = function(id) {
         if (scenes[id]) {
           scenes[id].scene.switchTo();
@@ -108,9 +105,9 @@
       };
     }
 
-    // ✅ Wait for DOM and user interaction to start WebGL
+    // Attach click/touch once page is loaded
     window.addEventListener("load", function () {
-      const overlay = document.getElementById("startOverlay");
+      var overlay = document.getElementById("startOverlay");
       overlay.addEventListener("click", startTour, { once: true });
       overlay.addEventListener("touchstart", startTour, { once: true });
     });
