@@ -57,7 +57,8 @@
   </div>
 
   <script>
-    var viewer, scenes = {};
+    var viewer;
+    var scenes = {};
     var sceneList = {
       "outside": "outside.jpg",
       "mainhall": "mainhall.jpg",
@@ -79,7 +80,7 @@
         view: view,
         pinFirstLevel: true
       });
-      scenes[id] = { scene, view };
+      scenes[id] = { scene: scene, view: view };
     }
 
     function startTour() {
@@ -89,13 +90,13 @@
       scenes["outside"].scene.switchTo();
     }
 
-    window.gotoScene = function(id) {
+    function gotoScene(id) {
       if (scenes[id]) {
         scenes[id].scene.switchTo();
       } else {
         alert("Scene not found: " + id);
       }
-    };
+    }
 
     window.addEventListener("load", function () {
       var overlay = document.getElementById("startOverlay");
