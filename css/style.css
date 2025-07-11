@@ -1,2 +1,11 @@
+#logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 140px;
+  z-index: 9999;
+  opacity: 0.95;
+}
+
 body { margin: 0; font-family: sans-serif; }
 #pano { width: 100vw; height: 100vh; background: #000; }
