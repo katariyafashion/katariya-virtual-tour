@@ -6,13 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <script src="https://cdn.jsdelivr.net/npm/marzipano@0.10.1/dist/marzipano.js"></script>
   <style>
-    body { margin: 0; font-family: sans-serif; background: black; }
-    #pano { width: 100vw; height: 100vh; }
-
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+      height: 100%;
+    }
+    #pano {
+      width: 100vw;
+      height: 100vh;
+    }
     #startOverlay {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100%; height: 100%;
       background: black;
       color: white;
       display: flex;
@@ -22,20 +30,21 @@
       z-index: 9999;
       cursor: pointer;
     }
-
     .nav-buttons {
       position: absolute;
-      bottom: 20px; left: 50%;
+      bottom: 15px;
+      left: 50%;
       transform: translateX(-50%);
-      display: flex; flex-wrap: wrap;
-      gap: 10px; z-index: 9998;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      z-index: 9998;
     }
-
     .nav-buttons button {
-      padding: 8px 12px;
-      font-size: 14px;
-      background: #fff;
+      background: white;
       border: none;
+      padding: 8px 14px;
+      font-size: 14px;
       border-radius: 5px;
       cursor: pointer;
     }
@@ -43,67 +52,66 @@
 </head>
 <body>
 
-  <div id="startOverlay">Tap to Start Virtual Tour</div>
-  <div id="pano"></div>
+<div id="startOverlay">Tap to Start Virtual Tour</div>
+<div id="pano"></div>
 
-  <div class="nav-buttons">
-    <button onclick="gotoScene('outside')">Outside</button>
-    <button onclick="gotoScene('mainhall')">Main Hall</button>
-    <button onclick="gotoScene('dress_material')">Dress Material</button>
-    <button onclick="gotoScene('pant_set_reception')">Reception</button>
-    <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
-    <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
-    <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
-  </div>
+<div class="nav-buttons">
+  <button onclick="gotoScene('outside')">Outside</button>
+  <button onclick="gotoScene('mainhall')">Main Hall</button>
+  <button onclick="gotoScene('dress_material')">Dress Material</button>
+  <button onclick="gotoScene('pant_set_reception')">Reception</button>
+  <button onclick="gotoScene('pant_set_department')">Pant Sets</button>
+  <button onclick="gotoScene('kurtis_upstairs')">Short Kurtis</button>
+  <button onclick="gotoScene('kurti_downstairs')">Long Kurtis</button>
+</div>
 
-  <script>
-    var viewer;
-    var scenes = {};
-    var sceneList = {
-      "outside": "outside.jpg",
-      "mainhall": "mainhall.jpg",
-      "dress_material": "dress_material.jpg",
-      "pant_set_reception": "pant_set_reception.jpg",
-      "pant_set_department": "pant_set_department.jpg",
-      "kurtis_upstairs": "kurtis_upstairs.jpg",
-      "kurti_downstairs": "kurti_downstairs.jpg"
-    };
+<script>
+  var viewer, scenes = {};
+  var sceneList = {
+    "outside": "outside.jpg",
+    "mainhall": "mainhall.jpg",
+    "dress_material": "dress_material.jpg",
+    "pant_set_reception": "pant_set_reception.jpg",
+    "pant_set_department": "pant_set_department.jpg",
+    "kurtis_upstairs": "kurtis_upstairs.jpg",
+    "kurti_downstairs": "kurti_downstairs.jpg"
+  };
 
-    function createScene(id) {
-      var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
-      var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-      var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
-      var view = new Marzipano.RectilinearView(null, limiter);
-      var scene = viewer.createScene({
-        source: source,
-        geometry: geometry,
-        view: view,
-        pinFirstLevel: true
-      });
-      scenes[id] = { scene: scene, view: view };
-    }
-
-    function startTour() {
-      document.getElementById("startOverlay").style.display = "none";
-      viewer = new Marzipano.Viewer(document.getElementById("pano"));
-      Object.keys(sceneList).forEach(createScene);
-      scenes["outside"].scene.switchTo();
-    }
-
-    function gotoScene(id) {
-      if (scenes[id]) {
-        scenes[id].scene.switchTo();
-      } else {
-        alert("Scene not found: " + id);
-      }
-    }
-
-    window.addEventListener("load", function () {
-      var overlay = document.getElementById("startOverlay");
-      overlay.addEventListener("click", startTour, { once: true });
-      overlay.addEventListener("touchstart", startTour, { once: true });
+  function createScene(id) {
+    var source = Marzipano.ImageUrlSource.fromString("scenes/" + sceneList[id]);
+    var geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
+    var limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
+    var view = new Marzipano.RectilinearView(null, limiter);
+    var scene = viewer.createScene({
+      source: source,
+      geometry: geometry,
+      view: view,
+      pinFirstLevel: true
     });
-  </script>
+    scenes[id] = { scene: scene, view: view };
+  }
+
+  function startTour() {
+    document.getElementById("startOverlay").style.display = "none";
+    viewer = new Marzipano.Viewer(document.getElementById("pano"));
+    Object.keys(sceneList).forEach(createScene);
+    scenes["outside"].scene.switchTo();
+  }
+
+  function gotoScene(id) {
+    if (scenes[id]) {
+      scenes[id].scene.switchTo();
+    } else {
+      alert("Scene not found: " + id);
+    }
+  }
+
+  window.addEventListener("load", function () {
+    var overlay = document.getElementById("startOverlay");
+    overlay.addEventListener("click", startTour, { once: true });
+    overlay.addEventListener("touchstart", startTour, { once: true });
+  });
+</script>
 
 </body>
 </html>
