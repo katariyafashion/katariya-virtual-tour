@@ -17,7 +17,11 @@
       width: 100vw;
       height: 100vh;
     }
-    #startOverlay {
+    #startOverlay <div id="welcomeMessage">
+  👋 Welcome to <strong>Katariya Fashion</strong><br>
+  Explore our virtual showroom.
+</div>
+   {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
@@ -93,11 +97,21 @@
   }
 
   function startTour() {
-    document.getElementById("startOverlay").style.display = "none";
-    viewer = new Marzipano.Viewer(document.getElementById("pano"));
-    Object.keys(sceneList).forEach(createScene);
-    scenes["outside"].scene.switchTo();
-  }
+  document.getElementById("startOverlay").style.display = "none";
+
+  // Show welcome message
+  var welcome = document.getElementById("welcomeMessage");
+  welcome.style.display = "block";
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    welcome.style.display = "none";
+  }, 3000);
+
+  viewer = new Marzipano.Viewer(document.getElementById("pano"));
+  Object.keys(sceneList).forEach(createScene);
+  scenes["outside"].scene.switchTo();
+}
 
   function gotoScene(id) {
     if (scenes[id]) {
