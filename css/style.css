@@ -6,6 +6,21 @@
   z-index: 9999;
   opacity: 0.95;
 }
+ 
+#fullscreenBtn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background: #ffffff;
+  color: #000;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 9999;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
 body { margin: 0; font-family: sans-serif; }
 #pano { width: 100vw; height: 100vh; background: #000; }

@@ -63,8 +63,9 @@
   <button onclick="gotoScene('pant_set_department')">Pant Set Department</button>
   <button onclick="gotoScene('kurtis_upstairs')">Short Kurti Department</button>
   <button onclick="gotoScene('kurti_downstairs')">Kurti Section</button>
-</div>
+  <button id="fullscreenBtn" onclick="openFullscreen()">⛶ Fullscreen</button>
 
+</div>
 <script>
   var viewer, scenes = {};
   var sceneList = {
@@ -105,6 +106,17 @@
       alert("Scene not found: " + id);
     }
   }
+
+  function openFullscreen() {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
 
   window.addEventListener("load", function () {
     var overlay = document.getElementById("startOverlay");
